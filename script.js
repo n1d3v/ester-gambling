@@ -12,7 +12,8 @@ function XorShift(seed) {
   // the `constructor` function will be used to generate new instances.
   // In that case `this` will point to the default RNG, and `this` will
   // be an instance of XorShift.
-  if (!(this instanceof XorShift) || this === module.exports) {
+//  if (!(this instanceof XorShift) || this === module.exports) {
+  if (true) {
     return new XorShift(seed);
   }
 
