@@ -166,23 +166,30 @@ document.getElementById('spin-button').addEventListener('click', function() {
     }
 
     function checkJackpot(r1, r2, r3) {
-        const jackpots = [
-            ['BAR', 'BAR', '🍒'],
-            ['BAR', '🍒', 'BAR'],
-            ['1', '1', '1'],
-            ['2', '2', '2'],
-            ['3', '3', '3'],
-            ['4', '4', '4'],
-            ['5', '5', '5'],
-            ['6', '6', '6'],
-            ['7', '7', '7'],
-            ['BAR', 'BAR', 'BAR'],
-            ['🍒', '🍒', 'BAR'],
-            ['🍒', 'BAR', '🍒'],
-            ['🍒', '🍒', '🍒']
-        ];
+      const jackpots = [
+          ['BAR', 'BAR', '🍒'],
+          ['BAR', '🍒', 'BAR'],
+          ['🍒', 'BAR', '🍒'],
+          ['🍒', '🍒', 'BAR'],
+          ['🍒', '🍒', '🍒'],
+          ['7', '7', '7'],
+          ['BAR', 'BAR', 'BAR'],
+          ['1', '1', '1'],
+          ['2', '2', '2'],
+          ['3', '3', '3'],
+          ['4', '4', '4'],
+          ['5', '5', '5'],
+          ['6', '6', '6'],
+          ['💎', '💎', '💎']
+      ];
 
-        return jackpots.some(jackpot => jackpot[0] === r1 && jackpot[1] === r2 && jackpot[2] === r3);
-    }
+        for (let i = 0; i < jackpots.length; i++) {
+          const spinythingy = jackpots[i];
+          if (spinythingy[0] === r1 && spinythingy[1] === r2 && spinythingy[2] === r3) {
+              return true;
+          }
+      }
+      return false;
+  }
     spinAllReels();
 });
