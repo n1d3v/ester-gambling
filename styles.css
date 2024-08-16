@@ -37,8 +37,8 @@ h1 {
 
 .reel-container {
     overflow: hidden;
-    width: 60px;
-    height: 100px;
+    width: 100px;
+    height: 60px;
     margin: 0 10px;
     background-color: #ecf0f1;
     border-radius: 5px;

@@ -152,6 +152,13 @@ document.getElementById('spin-button').addEventListener('click', function() {
         });
     }
 
+    function playJackpotSound() {
+      winfxSound.play();  // Play win effect
+      setTimeout(() => {
+          coinsSound.play();  // Play coins sound
+      }, 500); // Delay to ensure win effect sound is played first
+    }  
+
     async function spinAllReels() {
         const result1 = await spinReel(reel1, 100, 10);
         const result2 = await spinReel(reel2, 100, 10);
@@ -160,6 +167,7 @@ document.getElementById('spin-button').addEventListener('click', function() {
         const isJackpot = checkJackpot(result1, result2, result3);
         if (isJackpot) {
             resultMessage.textContent = "777 big win";
+            playJackpotSound()
         } else {
             resultMessage.textContent = "your just fucking horrible arent you";
         }
