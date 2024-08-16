@@ -13,7 +13,7 @@ function XorShift(seed) {
   // In that case `this` will point to the default RNG, and `this` will
   // be an instance of XorShift.
 //  if (!(this instanceof XorShift) || this === module.exports) {
-  if (true) {
+  if (false) {
     return new XorShift(seed);
   }
 
