@@ -15,12 +15,10 @@ document.getElementById('spin-button').addEventListener('click', function() {
     const reel3 = document.getElementById('reel3');
     const resultMessage = document.getElementById('result-message');
 
-    const loseMessages = [
-    	"At least you're here.",
-	"There are other gamblers that are winning, and then there's you.",
-	"I'm leaving you.",
-	"By your standards that's a win, <i>isn't it?</i>",
-    ]
+    const loseMessages = ["fuck you imagine not winning",
+                 "your fucking awful",
+                 "you should jump",
+                 "by your standards, just keep going."];
 
     resultMessage.textContent = "";
 
@@ -53,10 +51,10 @@ document.getElementById('spin-button').addEventListener('click', function() {
     }
 
     function playJackpotSound() {
-      winfxSound.play();  // Play win effect
+      winfxSound.play();
       setTimeout(() => {
-          coinsSound.play();  // Play coins sound
-      }, 500); // Delay to ensure win effect sound is played first
+          coinsSound.play();
+      }, 500);
     }  
 
     async function spinAllReels() {
