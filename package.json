@@ -1,0 +1,29 @@
+{
+  "name": "ester-gambling",
+  "version": "0.1.0",
+  "description": "wanan gambl?????",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "cat index.js | esbuild --bundle --minify > script.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patricktbp/ester-gambling.git"
+  },
+  "keywords": [
+    "gambl"
+  ],
+  "author": "patricktbp",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/patricktbp/ester-gambling/issues"
+  },
+  "homepage": "https://github.com/patricktbp/ester-gambling#readme",
+  "devDependencies": {
+    "esbuild": "^0.23.1"
+  },
+  "dependencies": {
+    "xorshift": "^1.2.0"
+  }
+}

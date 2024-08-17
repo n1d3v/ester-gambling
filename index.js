@@ -1,10 +1,26 @@
-const XorShift = require('xorshift');
+const xorshift = require('xorshift');
+
+console.log("You aren't here to cheat, right?");
+
+// Discard the first 1024 bytes
+// this should dissolve everything enough
+// so that it seems random :3
+for (let i = 0; i < 1024; i++) {
+	xorshift.random();
+}
 
 document.getElementById('spin-button').addEventListener('click', function() {
     const reel1 = document.getElementById('reel1');
     const reel2 = document.getElementById('reel2');
     const reel3 = document.getElementById('reel3');
     const resultMessage = document.getElementById('result-message');
+
+    const loseMessages = [
+    	"At least you're here.",
+	"There are other gamblers that are winning, and then there's you.",
+	"I'm leaving you.",
+	"By your standards that's a win, <i>isn't it?</i>",
+    ]
 
     resultMessage.textContent = "";
 
@@ -25,7 +41,7 @@ document.getElementById('spin-button').addEventListener('click', function() {
                         setTimeout(spin, delay);
                     } else {
                         for (let i = 0; i < reel.children.length; i++) {
-                            reel.children[i].textContent = symbols[Math.floor(miau.random() * symbols.length)];
+                            reel.children[i].textContent = symbols[Math.floor(xorshift.random() * symbols.length)];
                         }
                         resolve(reel.children[1].textContent);
                     }
@@ -53,7 +69,7 @@ document.getElementById('spin-button').addEventListener('click', function() {
             resultMessage.textContent = "777 big win";
             playJackpotSound()
         } else {
-            resultMessage.textContent = "you're just fucking horrible, aren't you!?";
+            resultMessage.innerHTML = loseMessages[Math.floor(Math.random() * loseMessages.length)]
         }
     }
 
