@@ -54,6 +54,9 @@
         let replenishClicks = 0;
         const maxReplenishClicks = 5;
         let spinning = false;
+        let taxInterval = null;
+        const taxPenaltyTime = 30000;
+        const successfulRunReward = 100;
 
         function updateMoneyDisplay() {
             $("#money").text(`money $${money}`);
@@ -68,6 +71,45 @@
             } else {
                 $("#replenish-button").hide();
             }
+        }
+
+        function startTaxInterval() {
+            taxInterval = setInterval(() => {
+                let taxAmount = Math.floor(Math.random() * Math.min(money, 100)) + 1;
+                let userGuess = prompt(`tax time :3 your amount to pay is: guess :>`);
+
+                if (userGuess !== null) {
+                    userGuess = parseInt(userGuess);
+                    if (userGuess >= taxAmount) {
+                        alert(`you paid your taxes!!!! you paid: $${taxAmount}. +100 for the irs being happy`);
+                        money += successfulRunReward;
+                        money -= taxAmount;
+                    } else {
+                        let fraudChoice = confirm(`you guessed too low, it was: $${taxAmount}. do you wanna try to run from the irs? (ok to run, cancel to go to jail)`);
+                        if (fraudChoice) {
+                            if (Math.random() > 0.5) {
+                                alert("you successfully ran away! +$100 for swag");
+                                money += successfulRunReward;
+                            } else {
+                                alert("you got caught! no gambling for a minute >:(");
+                                $("#spin-button").prop("disabled", true).addClass("disabled");
+                                setTimeout(() => {
+                                    alert("you're out of jail, guess the right amount next time.");
+                                    updateMoneyDisplay();
+                                }, taxPenaltyTime);
+                            }
+                        } else {
+                            alert("you went to jail for a minute...");
+                            $("#spin-button").prop("disabled", true).addClass("disabled");
+                            setTimeout(() => {
+                                alert("you're out of jail. be careful next time.");
+                                updateMoneyDisplay();
+                            }, taxPenaltyTime);
+                        }
+                    }
+                    updateMoneyDisplay();
+                }
+            }, 180000);
         }
 
         $("#spin-button").on("click", function() {
@@ -135,7 +177,7 @@
                     money += jackpotPrize;
                     playSoundFX();
                 } else {
-                    playLoseFX()
+                    playLoseFX();
                     $resultMessage.html(messages[Math.floor(Math.random() * messages.length)]);
                 }
                 updateMoneyDisplay();
@@ -176,6 +218,7 @@
             }
         });
 
+        startTaxInterval();
         updateMoneyDisplay();
     });
 })();
