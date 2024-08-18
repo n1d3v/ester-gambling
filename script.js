@@ -109,7 +109,7 @@
                     }
                     updateMoneyDisplay();
                 }
-            }, 180000);
+            }, 120000);
         }
 
         $("#spin-button").on("click", function() {
