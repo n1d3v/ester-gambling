@@ -45,12 +45,38 @@
     var w = B();
     console.log("You aren't here to cheat, right?");
     for (let t = 0; t < 1024; t++) w.random();
+
+    let money = 100;
+    const spinCost = 20;
+    const jackpotPrize = 1000;
+    const replenishAmount = 50;
+    let replenishClicks = 0;
+    const maxReplenishClicks = 5;
+
+    function updateMoneyDisplay() {
+        document.getElementById("money").textContent = `money $${money}`;
+        if (money <= 10 && replenishClicks < maxReplenishClicks) {
+            document.getElementById("replenish-button").style.display = "inline";
+        } else {
+            document.getElementById("replenish-button").style.display = "none";
+        }
+    }
+
     document.getElementById("spin-button").addEventListener("click", function() {
+        if (money < spinCost) {
+            alert("broke bitch cant continue gambling, you can just refresh or smmth");
+            updateMoneyDisplay();
+            return;
+        }
+
+        money -= spinCost;
+        updateMoneyDisplay();
+
         let t = document.getElementById("reel1"),
             n = document.getElementById("reel2"),
             c = document.getElementById("reel3"),
             l = document.getElementById("result-message"),
-            d = ["fuck you imagine not winning", "your fucking awful", "you should jump", "by your standards, just keep going."];
+            d = ["fuck you imagine not winning", "your fucking awful", "you should jump", "by your standards, just keep going.", "99% of gamblers quit before they win big!!"];
         l.textContent = "";
         let F = ["7", "BAR", "\u{1F352}", "\u{1F48E}", "1", "2", "3", "4", "5", "6"];
 
@@ -80,7 +106,14 @@
             let e = await p(t, 100, 10),
                 a = await p(n, 100, 10),
                 u = await p(c, 100, 10);
-            m(e, a, u) ? (l.textContent = "777 big win", r()) : l.innerHTML = d[Math.floor(Math.random() * d.length)]
+            if (m(e, a, u)) {
+                l.textContent = "777 big win";
+                money += jackpotPrize;
+                r();
+            } else {
+                l.innerHTML = d[Math.floor(Math.random() * d.length)];
+            }
+            updateMoneyDisplay();
         }
 
         function m(e, a, u) {
@@ -106,6 +139,19 @@
             }
             return !1
         }
-        o()
+        o();
     });
+
+    document.getElementById("replenish-button").addEventListener("click", function() {
+        if (money <= 10 && replenishClicks < maxReplenishClicks) {
+            money += replenishAmount;
+            replenishClicks++;
+            updateMoneyDisplay();
+        }
+        if (replenishClicks >= maxReplenishClicks) {
+            document.getElementById("replenish-button").style.display = "none";
+        }
+    });
+
+    updateMoneyDisplay();
 })();
