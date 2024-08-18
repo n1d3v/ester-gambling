@@ -1,111 +1,159 @@
 (() => {
-    var A = (t, n) => () => (n || t((n = {
-        exports: {}
-    }).exports, n), n.exports);
-    var B = A((x, v) => {
-        function f(t) {
-            if (!(this instanceof f) || this === v.exports) return new f(t);
-            if (!Array.isArray(t) || t.length !== 4) throw new TypeError("seed must be an array with 4 numbers");
-            this._state0U = t[0] | 0, this._state0L = t[1] | 0, this._state1U = t[2] | 0, this._state1L = t[3] | 0
-        }
-        f.prototype.randomint = function() {
-            var t = this._state0U,
-                n = this._state0L,
-                c = this._state1U,
-                l = this._state1L,
-                d = (l >>> 0) + (n >>> 0),
-                F = c + t + (d / 2 >>> 31) >>> 0,
-                p = d >>> 0;
-            this._state0U = c, this._state0L = l;
-            var r = 0,
-                o = 0,
-                m = 0,
-                e = 0,
-                a = 23,
-                u = 4294967295 << 32 - a;
-            r = t << a | (n & u) >>> 32 - a, o = n << a, t = t ^ r, n = n ^ o, r = t ^ c, o = n ^ l;
-            var i = 18,
-                h = 4294967295 >>> 32 - i;
-            m = t >>> i, e = n >>> i | (t & h) << 32 - i, r = r ^ m, o = o ^ e;
-            var s = 5,
-                y = 4294967295 >>> 32 - s;
-            return m = c >>> s, e = l >>> s | (c & y) << 32 - s, r = r ^ m, o = o ^ e, this._state1U = r, this._state1L = o, [F, p]
-        };
-        f.prototype.random = function() {
-            var t = this.randomint();
-            return t[0] * 23283064365386963e-26 + (t[1] >>> 12) * 2220446049250313e-31
-        };
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __commonJS = (cb, mod) => function __require() {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  };
 
-        function g() {
-            return Math.random() * Math.pow(2, 32)
+  // node_modules/xorshift/xorshift.js
+  var require_xorshift = __commonJS({
+    "node_modules/xorshift/xorshift.js"(exports, module) {
+      function XorShift(seed) {
+        if (!(this instanceof XorShift) || this === module.exports) {
+          return new XorShift(seed);
         }
-        v.exports = new f([g(), g(), g(), g()]);
-        v.exports.XorShift = f
-    });
-    var w = B();
-    console.log("You aren't here to cheat, right?");
-    for (let t = 0; t < 1024; t++) w.random();
-    document.getElementById("spin-button").addEventListener("click", function() {
-        let t = document.getElementById("reel1"),
-            n = document.getElementById("reel2"),
-            c = document.getElementById("reel3"),
-            l = document.getElementById("result-message"),
-            d = ["fuck you imagine not winning", "your fucking awful", "you should jump", "by your standards, just keep going."];
-        l.textContent = "";
-        let F = ["7", "BAR", "\u{1F352}", "\u{1F48E}", "1", "2", "3", "4", "5", "6"];
-
-        function p(e, a, u) {
-            return new Promise(i => {
-                let h = 0;
-
-                function s() {
-                    h++, e.style.transform = "translateY(-60px)", setTimeout(() => {
-                        if (e.appendChild(e.firstElementChild), e.style.transform = "translateY(0)", h < u) setTimeout(s, a);
-                        else {
-                            for (let y = 0; y < e.children.length; y++) e.children[y].textContent = F[Math.floor(w.random() * F.length)];
-                            i(e.children[1].textContent)
-                        }
-                    }, 100)
-                }
-                s()
-            })
+        if (!Array.isArray(seed) || seed.length !== 4) {
+          throw new TypeError("seed must be an array with 4 numbers");
         }
+        this._state0U = seed[0] | 0;
+        this._state0L = seed[1] | 0;
+        this._state1U = seed[2] | 0;
+        this._state1L = seed[3] | 0;
+      }
+      XorShift.prototype.randomint = function() {
+        var s1U = this._state0U, s1L = this._state0L;
+        var s0U = this._state1U, s0L = this._state1L;
+        var sumL = (s0L >>> 0) + (s1L >>> 0);
+        var resU = s0U + s1U + (sumL / 2 >>> 31) >>> 0;
+        var resL = sumL >>> 0;
+        this._state0U = s0U;
+        this._state0L = s0L;
+        var t1U = 0, t1L = 0;
+        var t2U = 0, t2L = 0;
+        var a1 = 23;
+        var m1 = 4294967295 << 32 - a1;
+        t1U = s1U << a1 | (s1L & m1) >>> 32 - a1;
+        t1L = s1L << a1;
+        s1U = s1U ^ t1U;
+        s1L = s1L ^ t1L;
+        t1U = s1U ^ s0U;
+        t1L = s1L ^ s0L;
+        var a2 = 18;
+        var m2 = 4294967295 >>> 32 - a2;
+        t2U = s1U >>> a2;
+        t2L = s1L >>> a2 | (s1U & m2) << 32 - a2;
+        t1U = t1U ^ t2U;
+        t1L = t1L ^ t2L;
+        var a3 = 5;
+        var m3 = 4294967295 >>> 32 - a3;
+        t2U = s0U >>> a3;
+        t2L = s0L >>> a3 | (s0U & m3) << 32 - a3;
+        t1U = t1U ^ t2U;
+        t1L = t1L ^ t2L;
+        this._state1U = t1U;
+        this._state1L = t1L;
+        return [resU, resL];
+      };
+      XorShift.prototype.random = function() {
+        var t2 = this.randomint();
+        return t2[0] * 23283064365386963e-26 + (t2[1] >>> 12) * 2220446049250313e-31;
+      };
+      function getRandomSeed() {
+        return Math.random() * Math.pow(2, 32);
+      }
+      module.exports = new XorShift([
+        getRandomSeed(),
+        getRandomSeed(),
+        getRandomSeed(),
+        getRandomSeed()
+      ]);
+      module.exports.XorShift = XorShift;
+    }
+  });
 
-        function r() {
-            winfxSound.play(), setTimeout(() => {
-                coinsSound.play()
-            }, 500)
-        }
-        async function o() {
-            let e = await p(t, 100, 10),
-                a = await p(n, 100, 10),
-                u = await p(c, 100, 10);
-            m(e, a, u) ? (l.textContent = "777 big win", r()) : l.innerHTML = d[Math.floor(Math.random() * d.length)]
-        }
-
-        function m(e, a, u) {
-            let i = [
-                ["BAR", "BAR", "\u{1F352}"],
-                ["BAR", "\u{1F352}", "BAR"],
-                ["\u{1F352}", "BAR", "\u{1F352}"],
-                ["\u{1F352}", "\u{1F352}", "BAR"],
-                ["\u{1F352}", "\u{1F352}", "\u{1F352}"],
-                ["7", "7", "7"],
-                ["BAR", "BAR", "BAR"],
-                ["1", "1", "1"],
-                ["2", "2", "2"],
-                ["3", "3", "3"],
-                ["4", "4", "4"],
-                ["5", "5", "5"],
-                ["6", "6", "6"],
-                ["\u{1F48E}", "\u{1F48E}", "\u{1F48E}"]
-            ];
-            for (let h = 0; h < i.length; h++) {
-                let s = i[h];
-                if (s[0] === e && s[1] === a && s[2] === u) return !0
+  // <stdin>
+  var xorshift = require_xorshift();
+  console.log("You aren't here to cheat, right?");
+  for (let i = 0; i < 1024; i++) {
+    xorshift.random();
+  }
+  document.getElementById("spin-button").addEventListener("click", function() {
+    const reel1 = document.getElementById("reel1");
+    const reel2 = document.getElementById("reel2");
+    const reel3 = document.getElementById("reel3");
+    const resultMessage = document.getElementById("result-message");
+    const loseMessages = [
+      "fuck you imagine not winning",
+      "your fucking awful",
+      "you should jump",
+      "by your standards, just keep going."
+    ];
+    resultMessage.textContent = "";
+    const symbols = ["7", "BAR", "\u{1F352}", "\u{1F48E}", "1", "2", "3", "4", "5", "6"];
+    function spinReel(reel, delay, spins) {
+      return new Promise((resolve) => {
+        let currentSpin = 0;
+        function spin() {
+          currentSpin++;
+          reel.style.transform = `translateY(-60px)`;
+          setTimeout(() => {
+            reel.appendChild(reel.firstElementChild);
+            reel.style.transform = "translateY(0)";
+            if (currentSpin < spins) {
+              setTimeout(spin, delay);
+            } else {
+              for (let i = 0; i < reel.children.length; i++) {
+                reel.children[i].textContent = symbols[Math.floor(xorshift.random() * symbols.length)];
+              }
+              resolve(reel.children[1].textContent);
             }
-            return !1
+          }, 100);
         }
-        o()
-    });
+        spin();
+      });
+    }
+    function playJackpotSound() {
+      winfxSound.play();
+      setTimeout(() => {
+        coinsSound.play();
+      }, 500);
+    }
+    async function spinAllReels() {
+      const result1 = await spinReel(reel1, 100, 10);
+      const result2 = await spinReel(reel2, 100, 10);
+      const result3 = await spinReel(reel3, 100, 10);
+      const isJackpot = checkJackpot(result1, result2, result3);
+      if (isJackpot) {
+        resultMessage.textContent = "777 big win";
+        playJackpotSound();
+      } else {
+        resultMessage.innerHTML = loseMessages[Math.floor(Math.random() * loseMessages.length)];
+      }
+    }
+    function checkJackpot(r1, r2, r3) {
+      const jackpots = [
+        ["BAR", "BAR", "\u{1F352}"],
+        ["BAR", "\u{1F352}", "BAR"],
+        ["\u{1F352}", "BAR", "\u{1F352}"],
+        ["\u{1F352}", "\u{1F352}", "BAR"],
+        ["\u{1F352}", "\u{1F352}", "\u{1F352}"],
+        ["7", "7", "7"],
+        ["BAR", "BAR", "BAR"],
+        ["1", "1", "1"],
+        ["2", "2", "2"],
+        ["3", "3", "3"],
+        ["4", "4", "4"],
+        ["5", "5", "5"],
+        ["6", "6", "6"],
+        ["\u{1F48E}", "\u{1F48E}", "\u{1F48E}"]
+      ];
+      for (let i = 0; i < jackpots.length; i++) {
+        const spinythingy = jackpots[i];
+        if (spinythingy[0] === r1 && spinythingy[1] === r2 && spinythingy[2] === r3) {
+          return true;
+        }
+      }
+      return false;
+    }
+    spinAllReels();
+  });
 })();
