@@ -97,11 +97,13 @@
             })
         }
 
-        function r() {
-            winfxSound.play(), setTimeout(() => {
-                coinsSound.play()
-            }, 500)
+        function playSoundFX() {
+            document.getElementById("winfx-sound").play();
+            setTimeout(() => {
+                document.getElementById("coins-sound").play();
+            }, 500);
         }
+        
         async function o() {
             let e = await p(t, 100, 10),
                 a = await p(n, 100, 10),
@@ -109,7 +111,7 @@
             if (m(e, a, u)) {
                 l.textContent = "777 big win";
                 money += jackpotPrize;
-                r();
+                playSoundFX();
             } else {
                 l.innerHTML = d[Math.floor(Math.random() * d.length)];
             }
