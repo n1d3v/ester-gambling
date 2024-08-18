@@ -79,56 +79,70 @@
         }
 
         function startTaxInterval() {
-            taxInterval = setInterval(() => {
-                let taxAmount = Math.floor(Math.random() * Math.min(money, 100)) + 1;
-                let userGuess = prompt(`tax time :3 your amount to pay is: guess :>`);
+            if (money > 0) { // Only start tax interval if money > 0
+                taxInterval = setInterval(() => {
+                    let taxAmount = Math.floor(Math.random() * Math.min(money, 100)) + 1;
 
-                if (userGuess !== null) {
-                    userGuess = parseInt(userGuess);
-                    
-                    if (userGuess === money) {
-                        alert("you smart mf, your going to jail for that.");
+                    if (taxAmount > money) {
+                        alert("you don't have enough money to pay taxes. going to jail for non-existent money :3");
                         inJail = true;
                         updateMoneyDisplay();
                         setTimeout(() => {
-                            alert("you're out of jail!");
+                            alert("you're out of jail! be more careful with your finances next time.");
                             inJail = false;
                             updateMoneyDisplay();
                         }, taxPenaltyTime);
-                    } else if (userGuess >= taxAmount) {
-                        alert(`you paid your taxes!!!! you paid: $${taxAmount}. +$100 for the IRS being happy.`);
-                        money += successfulRunReward;
-                        money -= taxAmount;
                     } else {
-                        let fraudChoice = confirm(`you guessed too low, it was: $${taxAmount}. do you want to try to run from the IRS? (ok to run, cancel to go to jail)`);
-                        if (fraudChoice) {
-                            if (Math.random() > 0.5) {
-                                alert("you successfully ran away! +$100 for swag.");
-                                money += successfulRunReward;
-                            } else {
-                                alert("you got caught! No gambling for a minute >:(");
+                        let userGuess = prompt(`tax time :3 your amount to pay is: guess :>`);
+
+                        if (userGuess !== null) {
+                            userGuess = parseInt(userGuess);
+                            
+                            if (userGuess === money) {
+                                alert("you smart mf, your going to jail for that.");
                                 inJail = true;
                                 updateMoneyDisplay();
                                 setTimeout(() => {
-                                    alert("you're out of jail. guess the right amount next time.");
+                                    alert("you're out of jail!");
                                     inJail = false;
                                     updateMoneyDisplay();
                                 }, taxPenaltyTime);
+                            } else if (userGuess >= taxAmount) {
+                                alert(`you paid your taxes!!!! you paid: $${taxAmount}. +$100 for the IRS being happy.`);
+                                money += successfulRunReward;
+                                money -= taxAmount;
+                            } else {
+                                let fraudChoice = confirm(`you guessed too low, it was: $${taxAmount}. do you want to try to run from the IRS? (ok to run, cancel to go to jail)`);
+                                if (fraudChoice) {
+                                    if (Math.random() > 0.5) {
+                                        alert("you successfully ran away! +$100 for swag.");
+                                        money += successfulRunReward;
+                                    } else {
+                                        alert("you got caught! No gambling for a minute >:(");
+                                        inJail = true;
+                                        updateMoneyDisplay();
+                                        setTimeout(() => {
+                                            alert("you're out of jail. guess the right amount next time.");
+                                            inJail = false;
+                                            updateMoneyDisplay();
+                                        }, taxPenaltyTime);
+                                    }
+                                } else {
+                                    alert("you went to jail for a minute...");
+                                    inJail = true;
+                                    updateMoneyDisplay();
+                                    setTimeout(() => {
+                                        alert("you're out of jail. be careful next time.");
+                                        inJail = false;
+                                        updateMoneyDisplay();
+                                    }, taxPenaltyTime);
+                                }
                             }
-                        } else {
-                            alert("you went to jail for a minute...");
-                            inJail = true;
                             updateMoneyDisplay();
-                            setTimeout(() => {
-                                alert("you're out of jail. be careful next time.");
-                                inJail = false;
-                                updateMoneyDisplay();
-                            }, taxPenaltyTime);
                         }
                     }
-                    updateMoneyDisplay();
-                }
-            }, 120000);
+                }, 120000);
+            }
         }
 
         $("#spin-button").on("click", function() {
