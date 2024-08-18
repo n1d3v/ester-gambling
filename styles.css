@@ -93,3 +93,20 @@ h1 {
     margin-top: 20px;
     color: #f39c12;
 }
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #303030;
+    border-radius: 8px;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+footer a {
+    color: #f39c12;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 16px;
+}
