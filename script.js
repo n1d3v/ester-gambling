@@ -47,7 +47,7 @@
     $(document).ready(function() {
         console.log("You aren't here to cheat, right?");
 
-        let money = 100;
+        let money = parseInt(localStorage.getItem('money')) || 100;
         const spinCost = 10;
         const jackpotPrize = 1000;
         const replenishAmount = 50;
@@ -61,6 +61,8 @@
 
         function updateMoneyDisplay() {
             $("#money").text(`money $${money}`);
+            localStorage.setItem('money', money);
+
             if (money <= 10) {
                 $("#spin-button").prop("disabled", true).addClass("disabled");
             } else {
@@ -79,7 +81,7 @@
         }
 
         function startTaxInterval() {
-            if (money > 0) { // Only start tax interval if money > 0
+            if (money > 0) {
                 taxInterval = setInterval(() => {
                     let taxAmount = Math.floor(Math.random() * Math.min(money, 100)) + 1;
 
@@ -111,12 +113,14 @@
                                 alert(`you paid your taxes!!!! you paid: $${taxAmount}. +$100 for the IRS being happy.`);
                                 money += successfulRunReward;
                                 money -= taxAmount;
+                                localStorage.setItem('money', money);
                             } else {
                                 let fraudChoice = confirm(`you guessed too low, it was: $${taxAmount}. do you want to try to run from the IRS? (ok to run, cancel to go to jail)`);
                                 if (fraudChoice) {
                                     if (Math.random() > 0.5) {
                                         alert("you successfully ran away! +$100 for swag.");
                                         money += successfulRunReward;
+                                        localStorage.setItem('money', money);
                                     } else {
                                         alert("you got caught! No gambling for a minute >:(");
                                         inJail = true;
@@ -155,6 +159,7 @@
             }
 
             money -= spinCost;
+            localStorage.setItem('money', money);
             updateMoneyDisplay();
             spinning = true;
 
@@ -208,6 +213,7 @@
                 if (checkWin(result1, result2, result3)) {
                     $resultMessage.text("777 big win");
                     money += jackpotPrize;
+                    localStorage.setItem('money', money);
                     playSoundFX();
                 } else {
                     playLoseFX();
@@ -244,6 +250,7 @@
             if (money <= 10 && replenishClicks < maxReplenishClicks) {
                 money += replenishAmount;
                 replenishClicks++;
+                localStorage.setItem('money', money);
                 updateMoneyDisplay();
             }
             if (replenishClicks >= maxReplenishClicks) {
