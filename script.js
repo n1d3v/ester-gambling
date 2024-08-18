@@ -55,8 +55,8 @@
         const maxReplenishClicks = 5;
         let spinning = false;
         let taxInterval = null;
-        let inJail = false;  // Track whether the user is in jail
-        const taxPenaltyTime = 30000;  // 30 seconds
+        let inJail = false;
+        const taxPenaltyTime = 30000;
         const successfulRunReward = 100;
 
         function updateMoneyDisplay() {
