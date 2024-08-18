@@ -55,7 +55,8 @@
         const maxReplenishClicks = 5;
         let spinning = false;
         let taxInterval = null;
-        const taxPenaltyTime = 30000;
+        let inJail = false;  // Track whether the user is in jail
+        const taxPenaltyTime = 30000;  // 30 seconds
         const successfulRunReward = 100;
 
         function updateMoneyDisplay() {
@@ -71,6 +72,10 @@
             } else {
                 $("#replenish-button").hide();
             }
+
+            if (inJail) {
+                $("#spin-button").prop("disabled", true).addClass("disabled");
+            }
         }
 
         function startTaxInterval() {
@@ -80,29 +85,43 @@
 
                 if (userGuess !== null) {
                     userGuess = parseInt(userGuess);
-                    if (userGuess >= taxAmount) {
-                        alert(`you paid your taxes!!!! you paid: $${taxAmount}. +100 for the irs being happy`);
+                    
+                    if (userGuess === money) {
+                        alert("you smart mf, your going to jail for that.");
+                        inJail = true;
+                        updateMoneyDisplay();
+                        setTimeout(() => {
+                            alert("you're out of jail!");
+                            inJail = false;
+                            updateMoneyDisplay();
+                        }, taxPenaltyTime);
+                    } else if (userGuess >= taxAmount) {
+                        alert(`you paid your taxes!!!! you paid: $${taxAmount}. +$100 for the IRS being happy.`);
                         money += successfulRunReward;
                         money -= taxAmount;
                     } else {
-                        let fraudChoice = confirm(`you guessed too low, it was: $${taxAmount}. do you wanna try to run from the irs? (ok to run, cancel to go to jail)`);
+                        let fraudChoice = confirm(`you guessed too low, it was: $${taxAmount}. do you want to try to run from the IRS? (ok to run, cancel to go to jail)`);
                         if (fraudChoice) {
                             if (Math.random() > 0.5) {
-                                alert("you successfully ran away! +$100 for swag");
+                                alert("you successfully ran away! +$100 for swag.");
                                 money += successfulRunReward;
                             } else {
-                                alert("you got caught! no gambling for a minute >:(");
-                                $("#spin-button").prop("disabled", true).addClass("disabled");
+                                alert("you got caught! No gambling for a minute >:(");
+                                inJail = true;
+                                updateMoneyDisplay();
                                 setTimeout(() => {
-                                    alert("you're out of jail, guess the right amount next time.");
+                                    alert("you're out of jail. guess the right amount next time.");
+                                    inJail = false;
                                     updateMoneyDisplay();
                                 }, taxPenaltyTime);
                             }
                         } else {
                             alert("you went to jail for a minute...");
-                            $("#spin-button").prop("disabled", true).addClass("disabled");
+                            inJail = true;
+                            updateMoneyDisplay();
                             setTimeout(() => {
                                 alert("you're out of jail. be careful next time.");
+                                inJail = false;
                                 updateMoneyDisplay();
                             }, taxPenaltyTime);
                         }
@@ -113,10 +132,10 @@
         }
 
         $("#spin-button").on("click", function() {
-            if (spinning) return;
+            if (spinning || inJail) return;
 
             if (money < spinCost) {
-                alert("broke bitch cant continue gambling, you can just refresh or smmth");
+                alert("broke bitch can't continue gambling. you can refresh or wait for taxes and pray you get money.");
                 updateMoneyDisplay();
                 return;
             }
@@ -129,7 +148,7 @@
                 $reel2 = $("#reel2"),
                 $reel3 = $("#reel3"),
                 $resultMessage = $("#result-message"),
-                messages = ["fuck you imagine not winning", "your fucking awful", "you should jump", "by your standards, just keep going.", "99% of gamblers quit before they win big!!"];
+                messages = ["fuck you, imagine not winning", "you're fucking awful", "you should jump", "by your standards, just keep going.", "99% of gamblers quit before they win big!!"];
             $resultMessage.text("");
             let symbols = ["7", "BAR", "\u{1F352}", "\u{1F48E}", "1", "2", "3", "4", "5", "6"];
 
@@ -189,7 +208,7 @@
                     ["BAR", "BAR", "\u{1F352}"],
                     ["BAR", "\u{1F352}", "BAR"],
                     ["\u{1F352}", "BAR", "\u{1F352}"],
-                    ["\u{1F352}", "\u{1F352}", "BAR"],
+                    ["\u{1F352}", "BAR", "BAR"],
                     ["\u{1F352}", "\u{1F352}", "\u{1F352}"],
                     ["7", "7", "7"],
                     ["BAR", "BAR", "BAR"],
