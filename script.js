@@ -1,4 +1,17 @@
 (() => {
+    function encode(data) {
+        return btoa(JSON.stringify(data));
+    }
+
+    function decode(data) {
+        try {
+            return JSON.parse(atob(data));
+        } catch (e) {
+            console.error("Error decoding data", e);
+            return null;
+        }
+    }
+
     var A = (t, n) => () => (n || t((n = {
         exports: {}
     }).exports, n), n.exports);
@@ -47,7 +60,17 @@
     $(document).ready(function() {
         console.log("You aren't here to cheat, right?");
 
-        let money = parseInt(localStorage.getItem('money')) || 100;
+        function loadMoney() {
+            const encodedMoney = localStorage.getItem('money');
+            const decodedMoney = decode(encodedMoney);
+            return decodedMoney && !isNaN(decodedMoney) ? parseInt(decodedMoney) : 100;
+        }
+
+        function saveMoney(amount) {
+            localStorage.setItem('money', encode(amount));
+        }
+
+        let money = loadMoney();
         const spinCost = 10;
         const jackpotPrize = 1000;
         const replenishAmount = 50;
@@ -61,7 +84,7 @@
 
         function updateMoneyDisplay() {
             $("#money").text(`money $${money}`);
-            localStorage.setItem('money', money);
+            saveMoney(money);
 
             if (money <= 10) {
                 $("#spin-button").prop("disabled", true).addClass("disabled");
@@ -113,14 +136,14 @@
                                 alert(`you paid your taxes!!!! you paid: $${taxAmount}. +$100 for the IRS being happy.`);
                                 money += successfulRunReward;
                                 money -= taxAmount;
-                                localStorage.setItem('money', money);
+                                saveMoney(money);
                             } else {
                                 let fraudChoice = confirm(`you guessed too low, it was: $${taxAmount}. do you want to try to run from the IRS? (ok to run, cancel to go to jail)`);
                                 if (fraudChoice) {
                                     if (Math.random() > 0.5) {
                                         alert("you successfully ran away! +$100 for swag.");
                                         money += successfulRunReward;
-                                        localStorage.setItem('money', money);
+                                        saveMoney(money);
                                     } else {
                                         alert("you got caught! No gambling for a minute >:(");
                                         inJail = true;
@@ -159,7 +182,7 @@
             }
 
             money -= spinCost;
-            localStorage.setItem('money', money);
+            saveMoney(money);
             updateMoneyDisplay();
             spinning = true;
 
@@ -213,7 +236,7 @@
                 if (checkWin(result1, result2, result3)) {
                     $resultMessage.text("777 big win");
                     money += jackpotPrize;
-                    localStorage.setItem('money', money);
+                    saveMoney(money);
                     playSoundFX();
                 } else {
                     playLoseFX();
@@ -250,7 +273,7 @@
             if (money <= 10 && replenishClicks < maxReplenishClicks) {
                 money += replenishAmount;
                 replenishClicks++;
-                localStorage.setItem('money', money);
+                saveMoney(money);
                 updateMoneyDisplay();
             }
             if (replenishClicks >= maxReplenishClicks) {
