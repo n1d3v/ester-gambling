@@ -48,11 +48,11 @@
         console.log("You aren't here to cheat, right?");
 
         let money = 100;
-        const spinCost = 20;
+        const spinCost = 10;
         const jackpotPrize = 1000;
         const replenishAmount = 50;
         let replenishClicks = 0;
-        const maxReplenishClicks = 5;
+        const maxReplenishClicks = 10;
         let spinning = false;
         let taxInterval = null;
         let inJail = false;
