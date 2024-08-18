@@ -122,6 +122,10 @@
                 }, 500);
             }
 
+            function playLoseFX() {
+                $("#lose-sound")[0].play();
+            }
+
             async function spin() {
                 let result1 = await spinReel($reel1, 100, 10),
                     result2 = await spinReel($reel2, 100, 10),
@@ -131,6 +135,7 @@
                     money += jackpotPrize;
                     playSoundFX();
                 } else {
+                    playLoseFX()
                     $resultMessage.html(messages[Math.floor(Math.random() * messages.length)]);
                 }
                 updateMoneyDisplay();
