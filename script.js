@@ -70,6 +70,10 @@
             localStorage.setItem('money', encode(amount));
         }
 
+        function playTaxFX() {
+            $("#tax-sound")[0].play();
+        }
+
         let money = loadMoney();
         const spinCost = 10;
         const jackpotPrize = 1000;
@@ -103,9 +107,13 @@
             }
         }
 
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         function startTaxInterval() {
             if (money > 0) {
-                taxInterval = setInterval(() => {
+                taxInterval = setInterval(async () => {
                     let taxAmount = Math.floor(Math.random() * Math.min(money, 100)) + 1;
 
                     if (taxAmount > money) {
@@ -118,13 +126,16 @@
                             updateMoneyDisplay();
                         }, taxPenaltyTime);
                     } else {
+                        playTaxFX();
+                        await delay(3000)
+                        
                         let userGuess = prompt(`tax time :3 your amount to pay is: guess :>`);
 
                         if (userGuess !== null) {
                             userGuess = parseInt(userGuess);
                             
                             if (userGuess === money) {
-                                alert("you smart mf, your going to jail for that.");
+                                alert("you smart mf, you're going to jail for that.");
                                 inJail = true;
                                 updateMoneyDisplay();
                                 setTimeout(() => {
@@ -138,32 +149,14 @@
                                 money -= taxAmount;
                                 saveMoney(money);
                             } else {
-                                let fraudChoice = confirm(`you guessed too low, it was: $${taxAmount}. do you want to try to run from the IRS? (ok to run, cancel to go to jail)`);
-                                if (fraudChoice) {
-                                    if (Math.random() > 0.5) {
-                                        alert("you successfully ran away! +$100 for swag.");
-                                        money += successfulRunReward;
-                                        saveMoney(money);
-                                    } else {
-                                        alert("you got caught! No gambling for a minute >:(");
-                                        inJail = true;
-                                        updateMoneyDisplay();
-                                        setTimeout(() => {
-                                            alert("you're out of jail. guess the right amount next time.");
-                                            inJail = false;
-                                            updateMoneyDisplay();
-                                        }, taxPenaltyTime);
-                                    }
-                                } else {
-                                    alert("you went to jail for a minute...");
-                                    inJail = true;
+                                alert(`you guessed too low, it was: $${taxAmount}. you're going to jail.`);
+                                inJail = true;
+                                updateMoneyDisplay();
+                                setTimeout(() => {
+                                    alert("you're out of jail. guess the right amount next time.");
+                                    inJail = false;
                                     updateMoneyDisplay();
-                                    setTimeout(() => {
-                                        alert("you're out of jail. be careful next time.");
-                                        inJail = false;
-                                        updateMoneyDisplay();
-                                    }, taxPenaltyTime);
-                                }
+                                }, taxPenaltyTime);
                             }
                             updateMoneyDisplay();
                         }
