@@ -52,17 +52,33 @@
     const replenishAmount = 50;
     let replenishClicks = 0;
     const maxReplenishClicks = 5;
+    let spinning = false;
 
     function updateMoneyDisplay() {
-        document.getElementById("money").textContent = `money $${money}`;
-        if (money <= 10 && replenishClicks < maxReplenishClicks) {
-            document.getElementById("replenish-button").style.display = "inline";
+        const moneyDisplay = document.getElementById("money");
+        const spinButton = document.getElementById("spin-button");
+        const replenishButton = document.getElementById("replenish-button");
+        
+        moneyDisplay.textContent = `money $${money}`;
+        
+        if (money <= 10) {
+            spinButton.disabled = true;
+            spinButton.classList.add("disabled");
         } else {
-            document.getElementById("replenish-button").style.display = "none";
+            spinButton.disabled = false;
+            spinButton.classList.remove("disabled");
+        }
+
+        if (money <= 10 && replenishClicks < maxReplenishClicks) {
+            replenishButton.style.display = "inline";
+        } else {
+            replenishButton.style.display = "none";
         }
     }
 
     document.getElementById("spin-button").addEventListener("click", function() {
+        if (spinning) return;
+
         if (money < spinCost) {
             alert("broke bitch cant continue gambling, you can just refresh or smmth");
             updateMoneyDisplay();
@@ -71,6 +87,7 @@
 
         money -= spinCost;
         updateMoneyDisplay();
+        spinning = true;
 
         let t = document.getElementById("reel1"),
             n = document.getElementById("reel2"),
@@ -103,7 +120,7 @@
                 document.getElementById("coins-sound").play();
             }, 500);
         }
-        
+
         async function o() {
             let e = await p(t, 100, 10),
                 a = await p(n, 100, 10),
@@ -116,6 +133,7 @@
                 l.innerHTML = d[Math.floor(Math.random() * d.length)];
             }
             updateMoneyDisplay();
+            spinning = false; // Reset spinning flag after spin is complete
         }
 
         function m(e, a, u) {
