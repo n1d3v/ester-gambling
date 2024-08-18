@@ -43,135 +43,134 @@
         v.exports.XorShift = f
     });
     var w = B();
-    console.log("You aren't here to cheat, right?");
-    for (let t = 0; t < 1024; t++) w.random();
 
-    let money = 100;
-    const spinCost = 20;
-    const jackpotPrize = 1000;
-    const replenishAmount = 50;
-    let replenishClicks = 0;
-    const maxReplenishClicks = 5;
-    let spinning = false;
+    $(document).ready(function() {
+        console.log("You aren't here to cheat, right?");
 
-    function updateMoneyDisplay() {
-        const moneyDisplay = document.getElementById("money");
-        const spinButton = document.getElementById("spin-button");
-        const replenishButton = document.getElementById("replenish-button");
-        
-        moneyDisplay.textContent = `money $${money}`;
-        
-        if (money <= 10) {
-            spinButton.disabled = true;
-            spinButton.classList.add("disabled");
-        } else {
-            spinButton.disabled = false;
-            spinButton.classList.remove("disabled");
-        }
+        let money = 100;
+        const spinCost = 20;
+        const jackpotPrize = 1000;
+        const replenishAmount = 50;
+        let replenishClicks = 0;
+        const maxReplenishClicks = 5;
+        let spinning = false;
 
-        if (money <= 10 && replenishClicks < maxReplenishClicks) {
-            replenishButton.style.display = "inline";
-        } else {
-            replenishButton.style.display = "none";
-        }
-    }
-
-    document.getElementById("spin-button").addEventListener("click", function() {
-        if (spinning) return;
-
-        if (money < spinCost) {
-            alert("broke bitch cant continue gambling, you can just refresh or smmth");
-            updateMoneyDisplay();
-            return;
-        }
-
-        money -= spinCost;
-        updateMoneyDisplay();
-        spinning = true;
-
-        let t = document.getElementById("reel1"),
-            n = document.getElementById("reel2"),
-            c = document.getElementById("reel3"),
-            l = document.getElementById("result-message"),
-            d = ["fuck you imagine not winning", "your fucking awful", "you should jump", "by your standards, just keep going.", "99% of gamblers quit before they win big!!"];
-        l.textContent = "";
-        let F = ["7", "BAR", "\u{1F352}", "\u{1F48E}", "1", "2", "3", "4", "5", "6"];
-
-        function p(e, a, u) {
-            return new Promise(i => {
-                let h = 0;
-
-                function s() {
-                    h++, e.style.transform = "translateY(-60px)", setTimeout(() => {
-                        if (e.appendChild(e.firstElementChild), e.style.transform = "translateY(0)", h < u) setTimeout(s, a);
-                        else {
-                            for (let y = 0; y < e.children.length; y++) e.children[y].textContent = F[Math.floor(w.random() * F.length)];
-                            i(e.children[1].textContent)
-                        }
-                    }, 100)
-                }
-                s()
-            })
-        }
-
-        function playSoundFX() {
-            document.getElementById("winfx-sound").play();
-            setTimeout(() => {
-                document.getElementById("coins-sound").play();
-            }, 500);
-        }
-
-        async function o() {
-            let e = await p(t, 100, 10),
-                a = await p(n, 100, 10),
-                u = await p(c, 100, 10);
-            if (m(e, a, u)) {
-                l.textContent = "777 big win";
-                money += jackpotPrize;
-                playSoundFX();
+        function updateMoneyDisplay() {
+            $("#money").text(`money $${money}`);
+            if (money <= 10) {
+                $("#spin-button").prop("disabled", true).addClass("disabled");
             } else {
-                l.innerHTML = d[Math.floor(Math.random() * d.length)];
+                $("#spin-button").prop("disabled", false).removeClass("disabled");
             }
-            updateMoneyDisplay();
-            spinning = false; // Reset spinning flag after spin is complete
-        }
 
-        function m(e, a, u) {
-            let i = [
-                ["BAR", "BAR", "\u{1F352}"],
-                ["BAR", "\u{1F352}", "BAR"],
-                ["\u{1F352}", "BAR", "\u{1F352}"],
-                ["\u{1F352}", "\u{1F352}", "BAR"],
-                ["\u{1F352}", "\u{1F352}", "\u{1F352}"],
-                ["7", "7", "7"],
-                ["BAR", "BAR", "BAR"],
-                ["1", "1", "1"],
-                ["2", "2", "2"],
-                ["3", "3", "3"],
-                ["4", "4", "4"],
-                ["5", "5", "5"],
-                ["6", "6", "6"],
-                ["\u{1F48E}", "\u{1F48E}", "\u{1F48E}"]
-            ];
-            for (let h = 0; h < i.length; h++) {
-                let s = i[h];
-                if (s[0] === e && s[1] === a && s[2] === u) return !0
+            if (money <= 10 && replenishClicks < maxReplenishClicks) {
+                $("#replenish-button").show();
+            } else {
+                $("#replenish-button").hide();
             }
-            return !1
         }
-        o();
-    });
 
-    document.getElementById("replenish-button").addEventListener("click", function() {
-        if (money <= 10 && replenishClicks < maxReplenishClicks) {
-            money += replenishAmount;
-            replenishClicks++;
+        $("#spin-button").on("click", function() {
+            if (spinning) return;
+
+            if (money < spinCost) {
+                alert("broke bitch cant continue gambling, you can just refresh or smmth");
+                updateMoneyDisplay();
+                return;
+            }
+
+            money -= spinCost;
             updateMoneyDisplay();
-        }
-        if (replenishClicks >= maxReplenishClicks) {
-            document.getElementById("replenish-button").style.display = "none";
-        }
-    });
+            spinning = true;
 
-    updateMoneyDisplay();
+            let $reel1 = $("#reel1"),
+                $reel2 = $("#reel2"),
+                $reel3 = $("#reel3"),
+                $resultMessage = $("#result-message"),
+                messages = ["fuck you imagine not winning", "your fucking awful", "you should jump", "by your standards, just keep going.", "99% of gamblers quit before they win big!!"];
+            $resultMessage.text("");
+            let symbols = ["7", "BAR", "\u{1F352}", "\u{1F48E}", "1", "2", "3", "4", "5", "6"];
+
+            function spinReel($reel, delay, spins) {
+                return new Promise(resolve => {
+                    let count = 0;
+
+                    function animate() {
+                        count++;
+                        $reel.css("transform", "translateY(-60px)");
+                        setTimeout(() => {
+                            $reel.append($reel.children().first());
+                            $reel.css("transform", "translateY(0)");
+                            if (count < spins) {
+                                setTimeout(animate, delay);
+                            } else {
+                                $reel.children().each((index, child) => {
+                                    $(child).text(symbols[Math.floor(w.random() * symbols.length)]);
+                                });
+                                resolve($reel.children().eq(1).text());
+                            }
+                        }, 100);
+                    }
+                    animate();
+                });
+            }
+
+            function playSoundFX() {
+                $("#winfx-sound")[0].play();
+                setTimeout(() => {
+                    $("#coins-sound")[0].play();
+                }, 500);
+            }
+
+            async function spin() {
+                let result1 = await spinReel($reel1, 100, 10),
+                    result2 = await spinReel($reel2, 100, 10),
+                    result3 = await spinReel($reel3, 100, 10);
+                if (checkWin(result1, result2, result3)) {
+                    $resultMessage.text("777 big win");
+                    money += jackpotPrize;
+                    playSoundFX();
+                } else {
+                    $resultMessage.html(messages[Math.floor(Math.random() * messages.length)]);
+                }
+                updateMoneyDisplay();
+                spinning = false;
+            }
+
+            function checkWin(result1, result2, result3) {
+                let winningPatterns = [
+                    ["BAR", "BAR", "\u{1F352}"],
+                    ["BAR", "\u{1F352}", "BAR"],
+                    ["\u{1F352}", "BAR", "\u{1F352}"],
+                    ["\u{1F352}", "\u{1F352}", "BAR"],
+                    ["\u{1F352}", "\u{1F352}", "\u{1F352}"],
+                    ["7", "7", "7"],
+                    ["BAR", "BAR", "BAR"],
+                    ["1", "1", "1"],
+                    ["2", "2", "2"],
+                    ["3", "3", "3"],
+                    ["4", "4", "4"],
+                    ["5", "5", "5"],
+                    ["6", "6", "6"],
+                    ["\u{1F48E}", "\u{1F48E}", "\u{1F48E}"]
+                ];
+                return winningPatterns.some(pattern => pattern[0] === result1 && pattern[1] === result2 && pattern[2] === result3);
+            }
+
+            spin();
+        });
+
+        $("#replenish-button").on("click", function() {
+            if (money <= 10 && replenishClicks < maxReplenishClicks) {
+                money += replenishAmount;
+                replenishClicks++;
+                updateMoneyDisplay();
+            }
+            if (replenishClicks >= maxReplenishClicks) {
+                $(this).hide();
+            }
+        });
+
+        updateMoneyDisplay();
+    });
 })();
