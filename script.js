@@ -77,7 +77,9 @@
         let money = loadMoney();
         const spinCost = 10;
         const jackpotPrize = 1000;
-        const replenishAmount = 50;
+        const robberySuccessRewardMin = 100;
+        const robberySuccessRewardMax = 500;
+        const robberyFailureReward = 50;
         let replenishClicks = 0;
         const maxReplenishClicks = 10;
         let spinning = false;
@@ -96,11 +98,7 @@
                 $("#spin-button").prop("disabled", false).removeClass("disabled");
             }
 
-            if (money <= 10 && replenishClicks < maxReplenishClicks) {
-                $("#replenish-button").show();
-            } else {
-                $("#replenish-button").hide();
-            }
+            $("#rob-button").toggle(money <= 10 && replenishClicks < maxReplenishClicks);
 
             if (inJail) {
                 $("#spin-button").prop("disabled", true).addClass("disabled");
@@ -117,7 +115,7 @@
                     let taxAmount = Math.floor(Math.random() * Math.min(money, 100)) + 1;
 
                     if (money < taxAmount) {
-                        let outrunIRS = confirm("you don't have enough money to pay taxes. do you want to try and outrun the IRS?");
+                        let outrunIRS = confirm("are you sure you want to try to outrun the IRS? (ok to try to outrun, cancel to go to jail)");
                         if (outrunIRS) {
                             alert("you managed to outrun the IRS... this time. no money was deducted. +$100 for swag");
                             money += successfulRunReward;
@@ -166,8 +164,8 @@
                                 money -= taxAmount;
                                 saveMoney(money);
                             } else {
-                                alert(`you guessed too low, it was: $${taxAmount}. try to outrun the IRS?`);
-                                let outrunIRS = confirm("you guessed too low, do you want to try and outrun the IRS?");
+                                alert(`you guessed too low, it was: $${taxAmount}. do you want try to outrun the IRS?`);
+                                let outrunIRS = confirm("are you sure you want to try to outrun the IRS? (ok to try to outrun, cancel to go to jail");
                                 if (outrunIRS) {
                                     alert("you managed to outrun the IRS... this time. no money was deducted. +$100 for swag");
                                     money += successfulRunReward;
@@ -187,7 +185,7 @@
                     }
                 }, 120000);
             }
-        }        
+        }
 
         $("#spin-button").on("click", function() {
             if (spinning || inJail) return;
@@ -286,16 +284,26 @@
             spin();
         });
 
-        $("#replenish-button").on("click", function() {
-            if (money <= 10 && replenishClicks < maxReplenishClicks) {
-                money += replenishAmount;
-                replenishClicks++;
-                saveMoney(money);
-                updateMoneyDisplay();
+        $("#rob-button").on("click", function() {
+            if (inJail) {
+                alert("you're in jail! no robbing banks for you.");
+                return;
             }
-            if (replenishClicks >= maxReplenishClicks) {
-                $(this).hide();
+
+            const successChance = 0.25;
+            const isSuccess = Math.random() < successChance;
+
+            if (isSuccess) {
+                const reward = Math.floor(Math.random() * (robberySuccessRewardMax - robberySuccessRewardMin + 1)) + robberySuccessRewardMin;
+                money += reward;
+                alert(`success! you robbed the bank and got $${reward}.`);
+            } else {
+                money += robberyFailureReward;
+                alert(`you failed! you tried to rob the bank but got $${robberyFailureReward} for trying.`);
             }
+
+            saveMoney(money);
+            updateMoneyDisplay();
         });
 
         startTaxInterval();
