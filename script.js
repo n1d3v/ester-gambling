@@ -7,7 +7,7 @@
         try {
             return JSON.parse(atob(data));
         } catch (e) {
-            console.error("Error decoding data", e);
+            console.error("error decoding data", e);
             return null;
         }
     }
@@ -58,7 +58,7 @@
     var w = B();
 
     $(document).ready(function() {
-        console.log("You aren't here to cheat, right?");
+        console.log("you aren't here to cheat, right?");
 
         function loadMoney() {
             const encodedMoney = localStorage.getItem('money');
@@ -115,7 +115,7 @@
             if (money > 0) {
                 taxInterval = setInterval(async () => {
                     let taxAmount = Math.floor(Math.random() * Math.min(money, 100)) + 1;
-        
+
                     if (money < taxAmount) {
                         let outrunIRS = confirm("you don't have enough money to pay taxes. do you want to try and outrun the IRS?");
                         if (outrunIRS) {
@@ -134,15 +134,24 @@
                     } else {
                         playTaxFX();
                         await delay(3000);
-                        
-                        let userGuess = prompt("tax time :3 your amount to pay is: guess :>");
-                        
+
+                        let userGuess = prompt(`tax time :3 your amount to pay is just guess :>`);
+
                         if (userGuess === null) {
                             alert("you little bitch, how dare you try to cancel tax >:(");
                             money -= taxAmount;
                         } else {
                             userGuess = parseInt(userGuess);
-                            if (userGuess === money) {
+                            if (userGuess > money) {
+                                alert("you tried to pay more than you have! you're going to jail for making up non-existent money. >:(");
+                                inJail = true;
+                                updateMoneyDisplay();
+                                setTimeout(() => {
+                                    alert("you're out of jail. guess the right amount next time.");
+                                    inJail = false;
+                                    updateMoneyDisplay();
+                                }, taxPenaltyTime);
+                            } else if (userGuess === money) {
                                 alert("you smart mf, you're going to jail for that.");
                                 inJail = true;
                                 updateMoneyDisplay();
@@ -157,14 +166,21 @@
                                 money -= taxAmount;
                                 saveMoney(money);
                             } else {
-                                alert(`you guessed too low, it was: $${taxAmount}. you're going to jail.`);
-                                inJail = true;
-                                updateMoneyDisplay();
-                                setTimeout(() => {
-                                    alert("you're out of jail. guess the right amount next time.");
-                                    inJail = false;
+                                alert(`you guessed too low, it was: $${taxAmount}. try to outrun the IRS?`);
+                                let outrunIRS = confirm("you guessed too low, do you want to try and outrun the IRS?");
+                                if (outrunIRS) {
+                                    alert("you managed to outrun the IRS... this time. no money was deducted. +$100 for swag");
+                                    money += successfulRunReward;
+                                } else {
+                                    alert("you failed to outrun the IRS. you're going to jail for making up non-existent money. >:(");
+                                    inJail = true;
                                     updateMoneyDisplay();
-                                }, taxPenaltyTime);
+                                    setTimeout(() => {
+                                        alert("you're out of jail. guess the right amount next time.");
+                                        inJail = false;
+                                        updateMoneyDisplay();
+                                    }, taxPenaltyTime);
+                                }
                             }
                         }
                         updateMoneyDisplay();
