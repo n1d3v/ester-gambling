@@ -115,25 +115,33 @@
             if (money > 0) {
                 taxInterval = setInterval(async () => {
                     let taxAmount = Math.floor(Math.random() * Math.min(money, 100)) + 1;
-
-                    if (taxAmount > money) {
-                        alert("you don't have enough money to pay taxes. going to jail for non-existent money :3");
-                        inJail = true;
-                        updateMoneyDisplay();
-                        setTimeout(() => {
-                            alert("you're out of jail! be more careful with your finances next time.");
-                            inJail = false;
+        
+                    if (money < taxAmount) {
+                        let outrunIRS = confirm("you don't have enough money to pay taxes. do you want to try and outrun the IRS?");
+                        if (outrunIRS) {
+                            alert("you managed to outrun the IRS... this time. no money was deducted. +$100 for swag");
+                            money += successfulRunReward;
+                        } else {
+                            alert("you failed to outrun the IRS. you're going to jail. >:(");
+                            inJail = true;
                             updateMoneyDisplay();
-                        }, taxPenaltyTime);
+                            setTimeout(() => {
+                                alert("you're out of jail. run better next time.");
+                                inJail = false;
+                                updateMoneyDisplay();
+                            }, taxPenaltyTime);
+                        }
                     } else {
                         playTaxFX();
-                        await delay(3000)
+                        await delay(3000);
                         
-                        let userGuess = prompt(`tax time :3 your amount to pay is: guess :>`);
-
-                        if (userGuess !== null) {
+                        let userGuess = prompt("tax time :3 your amount to pay is: guess :>");
+                        
+                        if (userGuess === null) {
+                            alert("you little bitch, how dare you try to cancel tax >:(");
+                            money -= taxAmount;
+                        } else {
                             userGuess = parseInt(userGuess);
-                            
                             if (userGuess === money) {
                                 alert("you smart mf, you're going to jail for that.");
                                 inJail = true;
@@ -158,12 +166,12 @@
                                     updateMoneyDisplay();
                                 }, taxPenaltyTime);
                             }
-                            updateMoneyDisplay();
                         }
+                        updateMoneyDisplay();
                     }
                 }, 120000);
             }
-        }
+        }        
 
         $("#spin-button").on("click", function() {
             if (spinning || inJail) return;
