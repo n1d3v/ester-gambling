@@ -215,8 +215,16 @@
                     const totalHeight = slotHeight * $reel.children().length;
                     let count = 0;
                     
-                    let sequence = [0, -60, -120, -180, -240, -300];
+                    let sequence = [0, -60, -120, -180];
                     let currentIndex = 0;
+                    
+                    const clickSound = document.getElementById("click-sound");
+                    clickSound.volume = 0.1;
+            
+                    function playClickSound() {
+                        clickSound.currentTime = 0;
+                        clickSound.play();
+                    }
             
                     function updatePosition() {
                         if (currentIndex >= sequence.length) {
@@ -236,6 +244,7 @@
                             }, delay);
                         } else {
                             $reel.css("transform", `translateY(${sequence[currentIndex]}px)`);
+                            playClickSound();
                             currentIndex++;
                             setTimeout(updatePosition, delay);
                         }
@@ -243,7 +252,7 @@
             
                     updatePosition();
                 });
-            }
+            }            
             
             function playSoundFX() {
                 $("#winfx-sound")[0].play();

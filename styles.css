@@ -47,7 +47,7 @@ h1 {
 }
 
 .reel {
-    transition: transform 0.25s ease-out;
+    transition: transform 0.25s linear;
     display: flex;
     flex-direction: column;
     transform: translateY(0);
