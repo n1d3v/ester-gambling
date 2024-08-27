@@ -211,28 +211,40 @@
 
             function spinReel($reel, delay, spins) {
                 return new Promise(resolve => {
+                    const slotHeight = $reel.children().first().outerHeight();
+                    const totalHeight = slotHeight * $reel.children().length;
                     let count = 0;
-
-                    function animate() {
-                        count++;
-                        $reel.css("transform", "translateY(-60px)");
-                        setTimeout(() => {
-                            $reel.append($reel.children().first());
+                    
+                    let sequence = [0, -60, -120, -180, -240, -300];
+                    let currentIndex = 0;
+            
+                    function updatePosition() {
+                        if (currentIndex >= sequence.length) {
                             $reel.css("transform", "translateY(0)");
-                            if (count < spins) {
-                                setTimeout(animate, delay);
-                            } else {
-                                $reel.children().each((index, child) => {
-                                    $(child).text(symbols[Math.floor(w.random() * symbols.length)]);
-                                });
-                                resolve($reel.children().eq(1).text());
-                            }
-                        }, 100);
+                            $reel.append($reel.children().first());
+                            setTimeout(() => {
+                                if (count < spins) {
+                                    count++;
+                                    currentIndex = 0;
+                                    updatePosition();
+                                } else {
+                                    $reel.children().each((index, child) => {
+                                        $(child).text(symbols[Math.floor(w.random() * symbols.length)]);
+                                    });
+                                    resolve($reel.children().eq(1).text());
+                                }
+                            }, delay);
+                        } else {
+                            $reel.css("transform", `translateY(${sequence[currentIndex]}px)`);
+                            currentIndex++;
+                            setTimeout(updatePosition, delay);
+                        }
                     }
-                    animate();
+            
+                    updatePosition();
                 });
             }
-
+            
             function playSoundFX() {
                 $("#winfx-sound")[0].play();
                 setTimeout(() => {
@@ -262,23 +274,23 @@
             }
 
             function checkWin(result1, result2, result3) {
-                let winningPatterns = [
-                    ["BAR", "BAR", "\u{1F352}"],
-                    ["BAR", "\u{1F352}", "BAR"],
-                    ["\u{1F352}", "BAR", "\u{1F352}"],
-                    ["\u{1F352}", "BAR", "BAR"],
-                    ["\u{1F352}", "\u{1F352}", "\u{1F352}"],
-                    ["7", "7", "7"],
-                    ["BAR", "BAR", "BAR"],
-                    ["1", "1", "1"],
-                    ["2", "2", "2"],
-                    ["3", "3", "3"],
-                    ["4", "4", "4"],
-                    ["5", "5", "5"],
-                    ["6", "6", "6"],
-                    ["\u{1F48E}", "\u{1F48E}", "\u{1F48E}"]
-                ];
-                return winningPatterns.some(pattern => pattern[0] === result1 && pattern[1] === result2 && pattern[2] === result3);
+                const winningPatterns = {
+                    "BAR_BAR_🍒": true,
+                    "BAR_🍒_BAR": true,
+                    "🍒_BAR_🍒": true,
+                    "🍒_BAR_BAR": true,
+                    "🍒_🍒_🍒": true,
+                    "7_7_7": true,
+                    "BAR_BAR_BAR": true,
+                    "1_1_1": true,
+                    "2_2_2": true,
+                    "3_3_3": true,
+                    "4_4_4": true,
+                    "5_5_5": true,
+                    "6_6_6": true,
+                    "💎_💎_💎": true
+                };
+                return winningPatterns[`${result1}_${result2}_${result3}`] || false;
             }
 
             spin();

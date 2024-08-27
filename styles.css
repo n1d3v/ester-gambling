@@ -47,9 +47,10 @@ h1 {
 }
 
 .reel {
-    transition: transform 0.5s ease-in-out;
+    transition: transform 0.25s ease-out;
     display: flex;
     flex-direction: column;
+    transform: translateY(0);
 }
 
 .slot {
