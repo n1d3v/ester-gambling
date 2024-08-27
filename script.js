@@ -266,9 +266,9 @@
             }
 
             async function spin() {
-                let result1 = await spinReel($reel1, 100, 10),
-                    result2 = await spinReel($reel2, 100, 10),
-                    result3 = await spinReel($reel3, 100, 10);
+                let result1 = await spinReel($reel1, 100, 3),
+                    result2 = await spinReel($reel2, 100, 3),
+                    result3 = await spinReel($reel3, 100, 3);
                 if (checkWin(result1, result2, result3)) {
                     $resultMessage.text("777 big win");
                     money += jackpotPrize;
