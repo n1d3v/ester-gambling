@@ -205,7 +205,7 @@
                 $reel2 = $("#reel2"),
                 $reel3 = $("#reel3"),
                 $resultMessage = $("#result-message"),
-                messages = ["fuck you, imagine not winning", "you're fucking awful", "you should jump", "by your standards, just keep going.", "99% of gamblers quit before they win big!!"];
+                messages = ["imagine not winning", "you're awful", "you should try again", "by your standards, just keep going.", "99% of gamblers quit before they win big!!"];
             $resultMessage.text("");
             let symbols = ["7", "BAR", "\u{1F352}", "\u{1F48E}", "1", "2", "3", "4", "5", "6"];
 
